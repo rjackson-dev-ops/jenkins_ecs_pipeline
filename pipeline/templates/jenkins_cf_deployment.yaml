@@ -236,9 +236,9 @@ Resources:
           ToPort: !Ref JenkinsPort
           CidrIp: !Ref SSHLocation
   JenkinEIP:
-  Type: AWS::EC2::EIP
-  Properties:
-    InstanceId: !Ref JenkinsInstance
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref JenkinsInstance
 
 # Specify any outputs for the stack.
 Outputs:
