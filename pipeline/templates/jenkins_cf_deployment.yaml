@@ -239,6 +239,7 @@ Resources:
     Type: AWS::EC2::EIP
     Properties:
       InstanceId: !Ref JenkinsInstance
+      Domain: vpc
 
 # Specify any outputs for the stack.
 Outputs:
