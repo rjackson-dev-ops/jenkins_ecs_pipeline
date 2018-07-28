@@ -57,7 +57,7 @@ Resources:
       AvailabilityZone: !Select [0, !GetAZs '']
       CidrBlock: !Sub '10.${ClassB}.0.0/20'
       MapPublicIpOnLaunch: true
-      VpcId: !Ref
+      VpcId: !Ref JenkinsECSVPC
       Tags:
       - Key: Name
         Value: 'A public'
@@ -68,7 +68,7 @@ Resources:
     Properties:
       AvailabilityZone: !Select [0, !GetAZs '']
       CidrBlock: !Sub '10.${ClassB}.16.0/20'
-      VpcId: !Ref
+      VpcId: !Ref JenkinsECSVPC
       Tags:
       - Key: Name
         Value: 'A private'
@@ -80,7 +80,7 @@ Resources:
       AvailabilityZone: !Select [1, !GetAZs '']
       CidrBlock: !Sub '10.${ClassB}.32.0/20'
       MapPublicIpOnLaunch: true
-      VpcId: !Ref
+      VpcId: !Ref JenkinsECSVPC
       Tags:
       - Key: Name
         Value: 'B public'
@@ -91,7 +91,7 @@ Resources:
     Properties:
       AvailabilityZone: !Select [1, !GetAZs '']
       CidrBlock: !Sub '10.${ClassB}.48.0/20'
-      VpcId: !Ref
+      VpcId: !Ref JenkinsECSVPC
       Tags:
       - Key: Name
         Value: 'B private'
@@ -100,14 +100,14 @@ Resources:
   RouteTablePublic: # should be RouteTableAPublic, but logical id was not changed for backward compatibility
     Type: 'AWS::EC2::RouteTable'
     Properties:
-      VpcId: !Ref
+      VpcId: !Ref JenkinsECSVPC
       Tags:
       - Key: Name
         Value: 'A Public'
   RouteTablePrivate: # should be RouteTableAPrivate, but logical id was not changed for backward compatibility
     Type: 'AWS::EC2::RouteTable'
     Properties:
-      VpcId: !Ref
+      VpcId: !Ref JenkinsECSVPC
       Tags:
       - Key: Name
         Value: 'A Private'
