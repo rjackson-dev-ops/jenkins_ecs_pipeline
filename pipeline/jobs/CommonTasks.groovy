@@ -8,7 +8,7 @@ def setupRvm(project_name) {
       set +x
       source ~/.rvm/scripts/rvm && \
         rvm use --install --create 2.5.1@${PROJECT_NAME} && \
-        export | egrep -i "(ruby|rvm)" > rvm.env &&
+        export | egrep -i "(ruby|rvm)" > rvm.env
       set -x
       bundle install --jobs 8 --retry 10 --with integration > output.txt && \
         wc -l output.txt && \
