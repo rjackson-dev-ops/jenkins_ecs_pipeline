@@ -93,7 +93,6 @@ node {
       stage('Status') {
         println '== Final Status (failed pipeline) =='
 
-        slackSend (channel: '#svs_mod_alerts', message: slackFailMessage)
         error("Build failed! " + exc)
       }
   }
