@@ -14,8 +14,8 @@ RUN apt-get update \
     && gem install crossing --no-rdoc --no-ri \
     && pip install awscli \
     &&  apt-get install -y nodejs \
-    && npm --prefix /app install \
-    && npm --prefix /app run bundle
+    && npm --prefix  install \
+    && npm --prefix run bundle
 
 RUN bundle install
 
