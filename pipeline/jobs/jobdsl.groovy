@@ -1,5 +1,5 @@
-def rubyVersion = JobSetup.rubyVersion = '2.3.7'
-def email = JobSetup.email = 'robert.jackson@stelligent.com'
+def rubyVersion = '2.3.7'
+def email = 'robert.jackson@stelligent.com'
 def repo = 'https://github.com/rjackson-dev-ops/jenkins_ecs_pipeline.git'
 def sshRepo = 'git@github.com:rjackson-dev-ops/jenkins_ecs_pipeline.git'
 def ruby_version = '2.3.7'
