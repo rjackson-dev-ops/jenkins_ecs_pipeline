@@ -15,7 +15,7 @@ node {
         deleteDir()
         checkout scm
         commonTasks = load "${rootDir}/pipeline/jobs/CommonTasks.groovy"
-        commonTasks.setupRvm('svs')
+        commonTasks.setupRvm('timetracker')
       }
     }
     stage('Build') {
