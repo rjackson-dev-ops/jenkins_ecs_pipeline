@@ -4,8 +4,7 @@
 def setupRvm(project_name) {
   println 'PROJECT_NAME=' + project_name
   withEnv(['PROJECT_NAME=' + project_name]) {
-      sh returnStdout: true, script: '''
-      #!/bin/bash -l
+      sh returnStdout: true, script: '''#!/bin/bash -l
       set +x
       source ~/.rvm/scripts/rvm && \
         rvm use --install --create 2.5.1@${PROJECT_NAME} && \
