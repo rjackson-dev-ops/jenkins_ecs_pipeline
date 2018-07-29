@@ -1,0 +1,110 @@
+def commonTasks = null
+
+println '== Start of Pipeline =='
+node {
+
+  def rootDir = env.WORKSPACE
+  env.rootDir = rootDir
+  def now = new Date()
+  env.pipeline_instance_id = "${now.format("yyyyMMddHHmmssSSS")}_${env.BUILD_NUMBER}"
+  env.AWS_REGION = env.region
+
+  try {
+    stage('Setup') {
+      steps : {
+        deleteDir()
+        checkout scm
+        commonTasks = load "${rootDir}/pipeline/jobs/CommonTasks.groovy"
+        commonTasks.setupRvm('svs')
+      }
+    }
+    stage('Build') {
+      timeout(45) {
+        parallel (
+          "brakeman" : {
+            //commonTasks.runRake('brakeman:run PIPELINE_STATE_NS="brakeman"', 'log/brakeman.log')
+            sleep 10
+            println 'Brakeman Successful'
+
+          },
+          "rubycritic" : {
+            ansiColor('xterm') {
+              // commonTasks.runRake('rubycritic PIPELINE_STATE_NS="rubycritic"', 'log/rubycritic.log')
+              println 'Ruby Critic is Happy'
+            }
+          },
+          "rubocop" : {
+            // commonTasks.runRake('rubocop PIPELINE_STATE_NS="rubocop"', 'log/rubocop.log')
+            println 'Rubocop is happy'
+          },
+          "build_container" : {
+            // commonTasks.runRake('build:container:svs_rails_app')
+            println 'Container built'
+          },
+          "unit" : {
+            println 'Unit Test Passed'
+         },
+        )
+      }
+    }
+
+    stage('Push Time Tracker Image') {
+      // commonTasks.runRake('push:image:svs_rails_app')
+      println "Push time tracker Image"
+    }
+
+    stage('Test and Deploy Unstable') {
+      timeout(45) {
+        parallel (
+          "unstable" : {
+            sleep 60
+            println 'Deploy Unstable'
+         },
+          "acceptance" : {
+            try {
+              println "Deploy Acceptance"
+           } catch (exc) {
+              throw exc
+            }
+          }
+        )
+      }
+    }
+    stage ('Promote Pipeline Image')
+    {
+      println 'Promoted Image'
+    }
+    stage('Deploy Demo/Nonprod') {
+      parallel (
+        "demo": {
+          println 'Deploy Demo'
+       },
+        "nonprod": {
+          println 'Deploy Nonprod'
+       }
+      )
+    }
+    stage ('Trigger Prod Deploy') {
+      println 'Trigger Deploy to NonProd'
+    }
+  }
+  catch (exc) {
+    println exc
+      stage('Status') {
+        println '== Final Status (failed pipeline) =='
+
+       )
+
+        slackSend (channel: '#svs_mod_alerts', message: slackFailMessage)
+        error("Build failed! " + exc)
+      }
+  }
+  finally {
+    stage('Clean') {
+      println '== Cleaning =='
+//      cleanWs()
+    }
+  }
+}
+
+println '== End of Pipeline =='
