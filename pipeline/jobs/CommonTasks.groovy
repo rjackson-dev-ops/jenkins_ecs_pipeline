@@ -7,12 +7,12 @@ def setupRvm(project_name) {
       sh returnStdout: true, script: '''
       set +x
       source ~/.rvm/scripts/rvm && \
-        rvm use --install --create 2.4.4@${PROJECT_NAME} && \
+        rvm use --install --create 2.5.1@${PROJECT_NAME} && \
         export | egrep -i "(ruby|rvm)" > rvm.env &&
       set -x
-      NOKOGIRI_USE_SYSTEM_LIBRARIES=true bundle install --jobs 8 --retry 10 --with integration > output.txt && \
+      bundle install --jobs 8 --retry 10 --with integration > output.txt && \
         wc -l output.txt && \
-        cat output.txt 
+        cat output.txt
       '''
   }
 }
