@@ -29,10 +29,8 @@ node {
 
           },
           "rubycritic" : {
-            ansiColor('xterm') {
               // commonTasks.runRake('rubycritic PIPELINE_STATE_NS="rubycritic"', 'log/rubycritic.log')
               println 'Ruby Critic is Happy'
-            }
           },
           "rubocop" : {
             // commonTasks.runRake('rubocop PIPELINE_STATE_NS="rubocop"', 'log/rubocop.log')
