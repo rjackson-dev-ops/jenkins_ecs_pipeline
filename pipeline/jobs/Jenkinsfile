@@ -16,6 +16,7 @@ node {
         checkout scm
         commonTasks = load "${rootDir}/pipeline/jobs/CommonTasks.groovy"
         commonTasks.setupRvm('timetracker')
+        println 'Finished Setup'
       }
     }
     stage('Build') {
