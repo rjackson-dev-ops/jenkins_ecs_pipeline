@@ -1,5 +1,7 @@
 FROM ruby:2.3.7
-WORKDIR /usr/src/app
+
+RUN umask 22 && mkdir -p /app
+WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
 
@@ -10,7 +12,6 @@ RUN apt-get update \
         python-dev \
         python-pip \
     && gem install crossing --no-rdoc --no-ri \
-    && pip install --upgrade pip \
     && pip install awscli \
     &&  apt-get install -y nodejs \
     && npm --prefix /app install \
