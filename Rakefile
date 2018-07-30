@@ -3,5 +3,5 @@
 
 require_relative 'config/application'
 
-Rake.add_rakelib 'lib/tasks'
+Rake.add_rakelib 'pipeline/tasks'
 Rails.application.load_tasks
