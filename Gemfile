@@ -39,6 +39,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # Gems for the pipeline
 gem 'cfndsl'
 gem 'docker-api'
+gem 'aws-sdk'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

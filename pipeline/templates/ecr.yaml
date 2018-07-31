@@ -1,14 +1,14 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
-  repo_name:
+  repoName:
     Type: String
     Description: Name of an existing ECR Repository
 Resources:
   StelligentEcrRepo:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: !Ref repo_name
+      RepositoryName: !Ref repoName
 Outputs:
-  ECR Repo:
+  ECRRepo:
     Description: 'ECR Repo'
     Value: !Ref StelligentEcrRepo
