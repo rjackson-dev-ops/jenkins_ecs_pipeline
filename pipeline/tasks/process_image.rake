@@ -3,15 +3,18 @@ require 'base64'
 require 'docker'
 require 'cfndsl'
 
+@image_id_path = 'blog-image-id'
+@ecr_repo_url_path = 'blog-ecr-repo'
+@repo = 'stelligent-demo-ecr'
+
 desc 'Build Application image'
-task :"build:image" do
+task 'build:image' => :environment do
   puts 'Building image'
   image = Docker::Image.build_from_dir(
     '.',
-    'dockerfile' => 'Dockerfile', 't' => 'blog:latest'
+    'dockerfile' => 'Dockerfile', 't' => "#{@repo}:latest"
   )
-  #File.write(@image_id_path, image.id)
-  ENV[image_id_path] =image.id
+  File.write(@image_id_path, image.id)
   puts "Image: #{image.id} built."
 end
 
@@ -36,15 +39,14 @@ task 'ecr:authenticate' do
                        'email' => 'none',
                        'serveraddress' => ecr_repo_url)
 
-  # File.write(@ecr_repo_url_path, ecr_repo_url)
-  ENV['ecr_repo_url_path'] = ecr_repo_url
+  File.write(@ecr_repo_url_path, ecr_repo_url)
 
   puts "Authenticated: #{ecr_repo_url} with with Docker on this machine."
 end
 
 desc 'Tag blog image'
 task 'blog:tag' do
-  image = Docker::Image.get(ENV[image_id_path])
+  image = Docker::Image.get(File.read(@image_id_path))
 
   # Authentication is required for this step
   if Docker.creds.nil?
@@ -52,9 +54,26 @@ task 'blog:tag' do
     Rake::Task['ecr:authenticate'].invoke
   end
 
-  ecr_repo = "#{ENV['ecr_repo_url_path']}/blog"
+  ecr_repo = "#{File.read(@ecr_repo_url_path)}/#{@repo}"
 
   image.tag(repo: ecr_repo, tag: 'latest')
 
   puts "Image: #{image.id} has been tagged: #{image.info['RepoTags'].last}."
+end
+
+desc 'Push blog image'
+task 'blog:push' do
+  image = Docker::Image.get(File.read(@image_id_path))
+  ecr_repo = "#{File.read(@ecr_repo_url_path)}/#{@repo}"
+  repo_tag = "#{ecr_repo}:latest"
+
+  # Authentication is required for this step
+  if Docker.creds.nil?
+    Rake::Task['ecr:authenticate'].reenable
+    Rake::Task['ecr:authenticate'].invoke
+  end
+
+  image.push(nil, repo_tag: repo_tag)
+
+  puts "Tag: #{repo_tag} pushed to ECR."
 end
