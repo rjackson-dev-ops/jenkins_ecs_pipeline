@@ -20,19 +20,13 @@ CloudFormation do
   # ElasticLoadBalancingV2
   Resource('LoadBalancerListener') do
     Type 'AWS::ElasticLoadBalancingV2::Listener'
-    Property('Certificates', [{
-               CertificateArn: FnJoin(
-                 '', ['arn:aws:iam::', Ref('AWS::AccountId'),
-                      ':server-certificate/', Ref('certName')]
-               )
-             }])
     Property('DefaultActions', [{
                TargetGroupArn: Ref('LoadBalancerTargetGroup'),
                Type: 'forward'
              }])
     Property('LoadBalancerArn', Ref('LoadBalancer'))
-    Property('Port', 443)
-    Property('Protocol', 'HTTPS')
+    Property('Port', 80)
+    Property('Protocol', 'HTTP')
   end
 
   Resource('LoadBalancer') do
@@ -45,12 +39,12 @@ CloudFormation do
   Resource('LoadBalancerTargetGroup') do
     Type 'AWS::ElasticLoadBalancingV2::TargetGroup'
     Property('HealthCheckIntervalSeconds', 30)
-    Property('HealthCheckProtocol', 'HTTPS')
-    Property('HealthCheckPath', '/health')
+    Property('HealthCheckProtocol', 'HTTP')
+    Property('HealthCheckPath', '/')
     Property('HealthCheckTimeoutSeconds', 7)
     Property('HealthyThresholdCount', 2)
-    Property('Port', 8443)
-    Property('Protocol', 'HTTPS')
+    Property('Port', 8080)
+    Property('Protocol', 'HTTP')
     Property('UnhealthyThresholdCount', 10)
     Property('VpcId', Ref('vpc'))
     Property('TargetGroupAttributes', [
@@ -59,37 +53,3 @@ CloudFormation do
              ])
   end
 
-  SNS_Topic(:alarmTopic) do
-    DisplayName 'SVS-CSM-ALARM-LOAD-BALANCER'
-    Subscription [{
-      'Endpoint' => 'uscis-ver-vdm@excella.com',
-      'Protocol' => 'email'
-    }]
-  end
-
-  CloudWatch_Alarm(:loadbalancerHealthyHosts) do
-    AlarmDescription 'No Healthy Hosts in LoadBalancer'
-    MetricName 'HealthyHostCount'
-    Namespace 'AWS/ApplicationELB'
-    Statistic 'Average'
-    Period '300'
-    EvaluationPeriods '1'
-    Threshold '0'
-    AlarmActions [Ref(:alarmTopic)]
-    Dimensions [
-      Dimension(
-        Name: 'LoadBalancer',
-        Value: FnGetAtt('LoadBalancer', 'LoadBalancerFullName')
-      ),
-      Dimension(
-        Name: 'TargetGroup',
-        Value: FnGetAtt('LoadBalancerTargetGroup', 'TargetGroupFullName')
-      )
-    ]
-    ComparisonOperator 'LessThanOrEqualToThreshold'
-  end
-
-  Output('LoadBalancerName', Ref('LoadBalancerTargetGroup'))
-  Output('LoadBalancerUrl', FnGetAtt('LoadBalancer', 'DNSName'))
-end
-# rubocop:enable Metrics/BlockLength

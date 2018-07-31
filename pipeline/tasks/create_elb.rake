@@ -3,19 +3,14 @@ require 'base64'
 require 'docker'
 require 'cfndsl'
 
-@image_id_path = 'tmp/blog-image-id'
-@ecr_repo_url_path = 'tmp/blog-ecr-repo'
+@image_id_path = 'blog-image-id'
+@ecr_repo_url_path = 'blog-ecr-repo'
 @repo = 'stelligent-demo-ecr'
 
-desc 'Build Application image'
-task 'build:image' => :environment do
-  puts 'Building image'
-  image = Docker::Image.build_from_dir(
-    '.',
-    'dockerfile' => 'Dockerfile', 't' => "#{@repo}:latest"
-  )
-  File.write(@image_id_path, image.id)
-  puts "Image: #{image.id} built."
+desc 'Deploy ELB'
+task 'deploy:elb' => :environment do
+  puts 'deploying elb'
+
 end
 
 desc 'Authenticate ECR'
