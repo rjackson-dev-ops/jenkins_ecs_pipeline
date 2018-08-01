@@ -1,7 +1,10 @@
-DemoS3Bucket:
-  Type: AWS::S3::Bucket
-  DeletionPolicy: Retain
-Ooutputs:
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  DemoS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: jenkins-demo-bucket
+Outputs:
   S3DemoBucket:
     Description: 'S3 Demo Bucket'
     Value: !Ref DemoS3Bucket
