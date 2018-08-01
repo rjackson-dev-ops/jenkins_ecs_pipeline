@@ -14,7 +14,7 @@ task 'get:configuration:values' do
 
   kms = Aws::KMS::Client.new region: @region
 
-  s3 =   Aws::S3::Encryption::Client.new(
+  s3 = Aws::S3::Encryption::Client.new(
     kms_key_id: @kms_alias,
     kms_client: kms,
     region: @region

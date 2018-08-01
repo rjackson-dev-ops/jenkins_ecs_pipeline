@@ -23,21 +23,17 @@ node {
       timeout(45) {
         parallel (
           "brakeman" : {
-            //commonTasks.runRake('brakeman:run PIPELINE_STATE_NS="brakeman"', 'log/brakeman.log')
             sleep 10
             println 'Brakeman Successful'
 
           },
           "rubycritic" : {
-              // commonTasks.runRake('rubycritic PIPELINE_STATE_NS="rubycritic"', 'log/rubycritic.log')
               println 'Ruby Critic is Happy'
           },
           "rubocop" : {
-            // commonTasks.runRake('rubocop PIPELINE_STATE_NS="rubocop"', 'log/rubocop.log')
             println 'Rubocop is happy'
           },
           "build_container" : {
-            // commonTasks.runRake('build:container:svs_rails_app')
             println 'Container built'
           },
           "unit" : {
@@ -48,7 +44,6 @@ node {
     }
 
     stage('Push Time Tracker Image') {
-      // commonTasks.runRake('push:image:svs_rails_app')
       println "Push time tracker Image"
     }
 
