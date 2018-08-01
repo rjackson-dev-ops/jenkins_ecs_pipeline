@@ -1,0 +1,7 @@
+DemoS3Bucket:
+  Type: AWS::S3::Bucket
+  DeletionPolicy: Retain
+Ooutputs:
+  S3DemoBucket:
+    Description: 'S3 Demo Bucket'
+    Value: !Ref DemoS3Bucket
