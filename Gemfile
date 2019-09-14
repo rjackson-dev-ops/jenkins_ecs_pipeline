@@ -41,6 +41,7 @@ gem 'cfndsl'
 gem 'docker-api'
 gem 'aws-sdk'
 gem 'crossing'
+gem 'nokogiri', '~> 1.10.4'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
